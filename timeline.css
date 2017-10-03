@@ -1,0 +1,350 @@
+.AddTagBand {
+    width: 100%;
+    position: relative;
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    border-color: #A0A0A0;
+    background-color: #FFFFFF;
+}
+
+.AddTagDialog {
+	/*width: 20%; */
+        width: 170px;
+}
+
+.AddTagDialogName {
+	width: 95%;
+}
+
+.AddTagDialogError {
+    color: red;
+}
+
+.BulkStartButton {
+
+}
+
+.BulkStopButton {
+
+}
+
+.ColorPicker { 
+    display: block;
+    width: 80%;
+}
+
+.ColorPickerColor {
+    margin: 1px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    float: left;
+    width: 16px;
+    height: 16px;
+}
+
+.ColorPickerSelectedColor {
+    border-width: 3px;
+    border-color: red;
+    width: 12px;
+    height: 12px;
+}
+
+.CurrentTimeBar {
+    position: absolute;
+    top: 0px;
+    width: 2px;
+    height: 100%;
+    background: rgb(255,0,0);
+    z-index: 99;
+}
+
+.CurrentTimeBarHandle {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 10px;
+    height: 10px;
+    background: rgb(0,128,0);
+    z-index: 100;
+}
+
+.EditTagDialog {
+    position: absolute;
+    background: white;
+    width: 100%;
+    display: block;
+}
+
+.EditTagDialogError {
+    color: red;
+}
+
+.EditEventDialog {
+    position: absolute;
+    background: white;
+    width: 100%;
+}
+
+.EditEventDialogContent {
+    resize: none;
+    width: 100%;
+}
+
+.EventBand {
+    position: absolute;
+    overflow: hidden;
+    width: 80%;
+    left: 20%;
+    height: 20px;
+    z-index:1;
+}
+
+.EventBand2 {
+    position: relative;
+}
+
+.EventBar {
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    height: 20px;
+    background-color: rgb(128, 128, 128);
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    border-width: 1px;
+    border-color: black;
+    border-style: dotted;
+    color: white;
+}
+
+.EventBar:hover {
+    opacity:0.8;
+    filter:alpha(opacity=80);
+}
+
+.EventBarSelected {
+    /*background-color: rgb(235, 250, 120);*/
+    border-width: 1px;
+    border-color: red;
+    border-style: solid;
+}
+
+.EventBarText {
+    font-size: 85%;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.EventBarContainment {
+    position: absolute;
+    top: 3px;
+    height: 25px;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    background-color: yellow;
+}
+
+.LeftMarker {
+    left: 20%;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    color: blue;
+}
+
+.RightMarker {
+    left: 100%;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    color: blue;
+}
+
+
+.TagDialog {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    width: 100%
+}
+
+.TagDialogName {
+    width: 98%;
+}
+
+.TagBand {
+    position: absolute;
+    left: 0px;
+    width: 20%;
+    height: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: gray;
+    background-color: gray;
+    cursor:row-resize;
+}
+
+.TagBand:hover {
+    opacity:0.8;
+    filter:alpha(opacity=80);
+}
+
+.TagBandSelected {
+    /*background-color: rgb(235, 250, 120);*/
+    border-color: red;
+}
+
+.TagCheckbox {
+    float: left;
+}
+
+.TagEventBand {
+    width: 100%;
+    position: relative;
+    border-width: 1px 0px 0px 0px;
+    border-style: solid;
+    border-color: #A0A0A0;
+    height: 22px;
+    z-index:1;
+}
+
+.TagLabel {
+    /*background-color: rgb(128, 128, 128);*/
+    /*color: white;*/
+    float: left;
+    overflow: hidden;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: static;
+    top: 0px;
+    width: 60%;
+    height: 100%;
+}
+
+.TagReorderHandle {
+    float: left;
+    background-image: url('images/VertScroll.png');
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+}
+
+.TagStartButton {
+    float: right;
+    /*background-image: url('images/active-start-tag.gif');
+    background-repeat: no-repeat;
+    border: 1px solid #999999;
+    width: 70px;*/
+    height: 20px;
+    color: #43cb00;
+    opacity:1;
+}
+
+.TagStartButton:hover {
+    /* background-image: url('images/hover-start-tag.gif'); */
+}
+
+.TagStopButton {
+    float: right;
+    /*background-image: url('images/active-stop-tag.gif');
+    background-repeat: no-repeat;
+    width: 20px;*/
+    color:red;
+    height: 20px;
+}
+
+.TagStopButton.hover {
+    /*background-image: url('images/hover-stop-tag.gif');*/
+}
+
+.TimeAxisMajorMarker {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+	width: 1px;
+	overflow: hidden;
+	border-width:0px 0px 0px 1px;
+	border-color:#666666;
+	border-style:solid;
+	vertical-align:bottom;
+    z-index: 20;
+}
+
+.TimeAxisMajorMarkerText {
+	position: absolute;
+    top: 0px;
+    z-index: 20;
+    font-size: 70%;
+    padding-left: 2px;
+}
+
+.TimeAxisMinorMarker {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+	width: 1px;
+	overflow: hidden;
+	border-width:0px 0px 0px 1px;
+	border-color:#666666;
+	border-style:dotted;
+	vertical-align:bottom;
+    z-index: 10;
+}
+
+.TimelineBase {
+    width: 98%;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    position: relative;
+    margin: auto;
+}
+
+.TimeMarkerDigitPanel {
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    border-color: #A0A0A0;
+    z-index:1;
+}
+
+.TimeMarkerDigitPanel1 {
+    width: 20%;
+	white-space:nowrap;
+}
+
+.TimeMarkerDigitPanel2 {
+    width: 80%;
+}
+
+.TimeMarkerPanel {
+    left: 20%;
+    top: 0%;
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    background-color: rgb(222,222,222);
+    z-index: 0;
+    overflow: hidden;
+}
+
+.ZoomInButton {
+    float: right;
+    background-image: url('images/zoomin.png');
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+
+}
+
+.ZoomOutButton {
+    float: right;
+    background-image: url('images/zoomout.png');
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+}
