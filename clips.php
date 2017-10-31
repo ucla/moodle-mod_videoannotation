@@ -133,9 +133,6 @@ class clip_form extends moodleform{
 
         $this->add_action_buttons(true, get_string('submit'));
 
-        // SSC-568,668,799.
-        // Insert JavaScript code for JWPlayer and the preview logic into the form.
-
         $mform->addElement('html', '<script type="text/javascript" src="' . $CFG->wwwroot .
             '/mod/videoannotation/jquery-ui-1.8.2.custom/js/jquery-1.4.2.min.js"></script>');
         $mform->addElement('html', '<script type="text/javascript" src="' . $CFG->wwwroot .

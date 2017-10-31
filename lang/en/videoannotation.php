@@ -108,7 +108,7 @@ $string['color'] = 'Color';
 $string['scope'] = 'Scope';
 $string['latitude'] = 'Latitude';
 $string['longitude'] = 'Longitude';
-	
+
 $string['importannotation'] = 'Import Annotation';
 $string['importfile'] = 'Select a \".csv\" File:';
 $string['cantimport'] = 'You can\'t import a file for this annotation becuase either the annotation has already been submitted or you don\'t have sufficient permissions.';
@@ -140,4 +140,3 @@ $string['importsyntax'] = 'The import file contains sytax errors';
 
 $string['tnastreamerurl'] = 'TNA Streamer URL';
 $string['tnastreamerurl_desc'] = '';
-?>

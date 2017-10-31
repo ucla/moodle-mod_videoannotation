@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+require_login();
+
 function videoannotation_user_candoanything() {
     $context = get_context_instance(CONTEXT_SYSTEM);
 

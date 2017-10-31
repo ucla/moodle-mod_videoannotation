@@ -26,6 +26,8 @@ ini_set('display_errors', true);
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(dirname(__FILE__) . '/lib.php');
 
+require_login();
+
 $inputs = array_merge($_GET, $_POST);
 
 if (is_array($inputs)) {
@@ -136,25 +138,25 @@ function handle_command($input, $commandnum) {
             // 1. Requestor has "manage" capability (instructor, etc.)
             // 2. Requestor has "view" capability, is in the given group, and the course has a group mode of SEPARATEGROUPS
             // 3. Requestor has "view" capability, is in any of the groups in the course, and the course has a group mode of VISIBLEGROUPS
-            // Now that we have the course module and the context, let's determine if the requester can access the data he asks for
+            // Now that we have the course module and the context, let's determine if the requester can access the data he asks for.
 
             $onlineusers = array();
             switch ($videoannotation->groupmode) {
                 case NOGROUPS:
-                    // "userid" parameter is required; we don't care about "groupid" parameter
+                    // "userid" parameter is required; we don't care about "groupid" parameter.
 
                     if (!isset($input['userid'])) {
                         return array("success" => false, "message" => "userid is required.");
                     }
 
-                    // If only "view" capability present, the requestor's user ID must be the same as the given user ID
+                    // If only "view" capability present, the requestor's user ID must be the same as the given user ID.
 
                     if (!$isadmin and ! $canmanage and $USER->id != $input['userid']) {
                         return array("success" => false, "message" => "Access denied (cannot access other users' tags).");
                     }
 
                     // Get and return data: all tags and events "owned" by
-                    // the user (given userid and null groupid)
+                    // the user (given userid and null groupid).
 
                     $tagusergroupclause = '(t.userid = ' . (int) $input['userid'] . ' AND t.groupid IS NULL )';
                     $eventusergroupclause = '(e.userid = ' . (int) $input['userid'] . ' AND e.groupid IS NULL )';
@@ -171,7 +173,7 @@ function handle_command($input, $commandnum) {
                 case VIDEOANNOTATION_GROUPMODE_ALL_GROUP:
                 case VIDEOANNOTATION_GROUPMODE_ALL_ALL:
 
-                    // "groupid" parameter is required; we don't care about "userid" parameter
+                    // "groupid" parameter is required; we don't care about "userid" parameter.
 
                     if (!isset($input['groupid'])) {
                         return array("success" => false, "message" => "groupid is required.");
@@ -179,7 +181,7 @@ function handle_command($input, $commandnum) {
 
                     // If only "view" capability present, the requestor's must be in
                     // * the given group (for separate group), or
-                    // * one of the groups in the course (for visible group)
+                    // * one of the groups in the course (for visible group).
 
                     if (!$isadmin and ! $canmanage) {
                         if ($videoannotation->groupmode == VIDEOANNOTATION_GROUPMODE_GROUP_USER) {
@@ -205,7 +207,6 @@ function handle_command($input, $commandnum) {
                             }
                         }
                     } else {
-                        // SSC-1231: Add user info to videoannotation_locks for admin users too
                         $lock = $DB->get_record('videoannotation_locks', array('videoannotationid' => $videoannotation->id, 'userid' => $USER->id, 'groupid' => $input['groupid']));
                         if ($lock) {
                             $DB->update_record('videoannotation_locks', (object) array('id' => $lock->id, 'timemodified' => time()));
@@ -231,7 +232,7 @@ function handle_command($input, $commandnum) {
 
                     // Get and return data
                     // For "individual" group mode: all tags and events "owned" by the user and the group (the given userid and groupid)
-                    // For other group modes: all tags and events "owned" by the group (null/non-null userid and the given groupid)
+                    // For other group modes: all tags and events "owned" by the group (null/non-null userid and the given groupid).
 
                     if ($videoannotation->groupmode == VIDEOANNOTATION_GROUPMODE_USER_USER) {
                         $tagusergroupclause = '(t.userid = ' . (int) $USER->id . ' AND t.groupid = ' . (int) $input['groupid'] . ')';
@@ -255,14 +256,14 @@ function handle_command($input, $commandnum) {
                 $timeout = $input['timeout'];
             }
 
-            // Start the timer
+            // Start the timer.
 
             $starttime = time();
 
-            // Keep fetching new tags and events (see break condition near the end of the loop)
+            // Keep fetching new tags and events (see break condition near the end of the loop).
 
             do {
-                // Get tags
+                // Get tags.
 
                 $sql = "SELECT t.id, t.name, t.color, t.timecreated, t.timemodified, t.level
                           FROM {videoannotation_tags} t
@@ -273,7 +274,8 @@ function handle_command($input, $commandnum) {
                 }
                 $sql .= ' ORDER BY t.sortorder';
                 $rs = $DB->get_recordset_sql($sql);
-                // Fill tags into array, even if there are none (new video annotation has no tags). Only error on database error, not empty rs
+                // Fill tags into array, even if there are none (new video annotation has no tags).
+                // Only error on database error, not empty rs.
                 try {
                     $data = array();
                     foreach ($rs as $record) {
@@ -285,7 +287,7 @@ function handle_command($input, $commandnum) {
                     return array("success" => false, "message" => "Database error ");
                 }
 
-                // Get events
+                // Get events.
 
                 $sql = "SELECT e.id, e.tagid, e.starttime, e.endtime, e.content, e.timecreated, e.timemodified, e.latitude, e.longitude, e.scope, e.level
                           FROM {videoannotation_events} e
@@ -338,7 +340,7 @@ function handle_command($input, $commandnum) {
                     $deletedevents = array();
                 }
 
-                // Determine new timestmp
+                // Determine new timestmp.
 
                 $newtimestamp = isset($input['timestamp']) ? $input['timestamp'] : 0;
                 foreach ($tags as &$tag) {
@@ -359,7 +361,7 @@ function handle_command($input, $commandnum) {
                 sleep(1);
             } while (true);
 
-            // Return tags and events
+            // Return tags and events.
 
             $result = array(
                 "success" => true,
@@ -383,7 +385,6 @@ function handle_command($input, $commandnum) {
                 return array("success" => false, "message" => "clipurl is not given.");
             }
 
-        // SSC-1191: Detect changes to the clip during editing
         case 'getclipdata':
             if (!isset($input['clipid'])) {
                 return array("success" => false, "message" => "clipid is not given.");
@@ -407,7 +408,6 @@ function handle_command($input, $commandnum) {
                 "data" => $data
             );
             return $result;
-        // END SSC-1191
 
         case 'addtag':
             if (!isset($input['clipid']) or ! isset($input['name'])) {
@@ -422,11 +422,11 @@ function handle_command($input, $commandnum) {
             $canview = has_capability('mod/videoannotation:view', $modulecontext);
             $isadmin = is_siteadmin($USER->id);
 
-            // Security check
+            // Security check.
 
             if (!$isadmin) {
 
-                // Case 1: "userid" not given, "groupid" not given (tag will be owned by the activity)
+                // Case 1: "userid" not given, "groupid" not given (tag will be owned by the activity).
                 if (!isset($input['userid']) and ! isset($input['groupid'])) {
                     // The user needs to have "manage" capability.
 
@@ -434,7 +434,7 @@ function handle_command($input, $commandnum) {
                         return array("success" => false, "message" => "mod/videoannotation:manage capability required.");
                     }
 
-                    // Case 2: "userid" given, "groupid" given (tag will be owned by the group)
+                    // Case 2: "userid" given, "groupid" given (tag will be owned by the group).
                 } else if (isset($input['userid']) and isset($input['groupid'])) {
 
                     // The user needs to have "manage" or "submit" capability.
@@ -467,10 +467,10 @@ function handle_command($input, $commandnum) {
                         return array("success" => false, "message" => "The given user must be in the given group.");
                     }
 
-                    // Case 3: "userid" given, "groupid" not given (tag will be owned by the user)
+                    // Case 3: "userid" given, "groupid" not given (tag will be owned by the user).
                 } else if (isset($input['userid'])) {
 
-                    // The user needs to have "manage" or "submit" capability
+                    // The user needs to have "manage" or "submit" capability.
 
                     if (!$canmanage and ! $cansubmit) {
                         return array("success" => false, "message" => "mod/videoannotation:manage or mod/videoannotation:submit capability required.");
@@ -494,7 +494,7 @@ function handle_command($input, $commandnum) {
                         return array("success" => false, "message" => "userid, if given, must be the requestor's user ID.");
                     }
 
-                    // Case 4: "userid" not given, "groupid" given
+                    // Case 4: "userid" not given, "groupid" given.
                 } else {
 
                     // Not acceptable; complain and abort.
@@ -516,7 +516,7 @@ function handle_command($input, $commandnum) {
                 $data->color = $input['color'];
             }
             if (isset($input['level'])) {
-                $data->level = $input['level']; 
+                $data->level = $input['level'];
             }
             $lastid = $DB->insert_record('videoannotation_tags', $data);
             if ($lastid !== false) {
@@ -526,7 +526,7 @@ function handle_command($input, $commandnum) {
             }
 
         case 'edittag':
-            // id must be given
+            // id must be given.
 
             if (!isset($input['id'])) {
                 return array("success" => false, "message" => "id is not given.");
@@ -544,10 +544,10 @@ function handle_command($input, $commandnum) {
             $isadmin = is_siteadmin($USER->id);
 
             if (!$isadmin) {
-                // Security check
+                // Security check.
 
                 switch ($videoannotation->groupmode) {
-                    // Case 1: group mode is off
+                    // Case 1: group mode is off.
 
                     case NOGROUPS:
                         // The tag must belong to the requestor and not a group.
@@ -564,7 +564,7 @@ function handle_command($input, $commandnum) {
 
                         break;
 
-                    // Case 2: group mode is "separate" or "visible"
+                    // Case 2: group mode is "separate" or "visible".
 
                     case VIDEOANNOTATION_GROUPMODE_USER_USER:
                     case VIDEOANNOTATION_GROUPMODE_GROUP_USER:
@@ -597,7 +597,7 @@ function handle_command($input, $commandnum) {
 
                         break;
 
-                    // Case 3: group mode is something else
+                    // Case 3: group mode is something else.
 
                     default:
                         // Complain and abort.
@@ -630,7 +630,7 @@ function handle_command($input, $commandnum) {
             return array("success" => true);
 
         case 'deletetag':
-            // id must be given
+            // id must be given.
 
             if (!isset($input['id'])) {
                 return array("success" => false, "message" => "id is not given.");
@@ -647,7 +647,7 @@ function handle_command($input, $commandnum) {
 
             if (!$isadmin) {
                 switch ($videoannotation->groupmode) {
-                    // Case 1: group mode is off
+                    // Case 1: group mode is off.
 
                     case NOGROUPS:
                         // The tag must belong to the requestor and not a group.
@@ -664,7 +664,7 @@ function handle_command($input, $commandnum) {
 
                         break;
 
-                    // Case 2: group mode is "separate" or "visible"
+                    // Case 2: group mode is "separate" or "visible".
 
                     case VIDEOANNOTATION_GROUPMODE_USER_USER:
                     case VIDEOANNOTATION_GROUPMODE_GROUP_USER:
@@ -696,7 +696,7 @@ function handle_command($input, $commandnum) {
 
                         break;
 
-                    // Case 3: group mode is something else
+                    // Case 3: group mode is something else.
 
                     default:
                         // Complain and abort.
@@ -720,7 +720,7 @@ function handle_command($input, $commandnum) {
             return array("success" => true);
 
         case 'reordertags':
-            // clipid and orders must be given
+            // clipid and orders must be given.
 
             if (!isset($input['clipid']) or ! isset($input['orders'])) {
                 return array("success" => false, "message" => "clipid or orders is not given.");
@@ -736,7 +736,7 @@ function handle_command($input, $commandnum) {
             $isadmin = is_siteadmin($USER->id);
             $dataobject = new stdClass();
             if ($isadmin || $canmanage) {
-                // OK
+                // OK.
             } else if ($cansubmit) {
                 if ($DB->record_exists('videoannotation_submissions', array('videoannotationid' => $videoannotation->id, 'userid' => $USER->id))) {
                     return array("success" => false, "Cannot reorder tags in a timeline that has already been submitted.");
@@ -751,7 +751,7 @@ function handle_command($input, $commandnum) {
             // 2. If "groupid" is given and the group mode is "separate" or "visible",
             //    and the user is in the given group,
             //    then the requestor can reorder her group's tags
-            // Either "userid" or "groupid", but not both, should be given
+            // Either "userid" or "groupid", but not both, should be given.
 
             switch ($videoannotation->groupmode) {
                 case NOGROUPS:
@@ -817,7 +817,7 @@ function handle_command($input, $commandnum) {
             // Security check.
 
             if (!$isadmin) {
-                // Case 1: "userid" not given, "groupid" not given (event will be owned by the activity)
+                // Case 1: "userid" not given, "groupid" not given (event will be owned by the activity).
 
                 if (!isset($input['userid']) and !isset($input['groupid'])) {
                     // The user needs to have "manage" capability.
@@ -826,7 +826,7 @@ function handle_command($input, $commandnum) {
                         return array("success" => false, "message" => "mod/videoannotation:manage capability required.");
                     }
 
-                // Case 2: "userid" given, "groupid" given (event will be owned by the group)
+                // Case 2: "userid" given, "groupid" given (event will be owned by the group).
                 } else if (isset($input['userid']) and isset($input['groupid'])) {
 
                     // The user needs to have "manage" or "submit" capability.
@@ -859,7 +859,7 @@ function handle_command($input, $commandnum) {
                         return array("success" => false, "message" => "The given user must be in the given group.");
                     }
 
-                // Case 3: "userid" given, "groupid" not given (tag will be owned by the user)
+                // Case 3: "userid" given, "groupid" not given (tag will be owned by the user).
                 } else if (isset($input['userid'])) {
 
                     // The user needs to have "manage" or "submit" capability.
@@ -886,7 +886,7 @@ function handle_command($input, $commandnum) {
                         return array("success" => false, "message" => "userid, if given, must be the requestor's user ID.");
                     }
 
-                // Case 4: "userid" not given, "groupid" given
+                // Case 4: "userid" not given, "groupid" given.
                 } else {
                     // Not acceptable; complain and abort.
 
@@ -935,7 +935,7 @@ function handle_command($input, $commandnum) {
             }
 
         case 'editevent':
-            // id must be given
+            // id must be given.
 
             if (!isset($input['id'])) {
                 return array("success" => false, "message" => "id is not given.");
@@ -956,7 +956,7 @@ function handle_command($input, $commandnum) {
                 // Security check.
 
                 switch ($videoannotation->groupmode) {
-                    // Case 1: group mode is off
+                    // Case 1: group mode is off.
 
                     case NOGROUPS:
                         // The event must belong to the requestor and not a group.
@@ -973,7 +973,7 @@ function handle_command($input, $commandnum) {
 
                         break;
 
-                    // Case 2: group mode is "separate" or "visible"
+                    // Case 2: group mode is "separate" or "visible".
 
                     case VIDEOANNOTATION_GROUPMODE_USER_USER:
                     case VIDEOANNOTATION_GROUPMODE_GROUP_USER:
@@ -1005,10 +1005,10 @@ function handle_command($input, $commandnum) {
 
                         break;
 
-                    // Case 3: group mode is something else
+                    // Case 3: group mode is something else.
 
                     default:
-                        // Complain and abort
+                        // Complain and abort.
 
                         return array("success" => false, "message" => "Access denied (invalid group mode).");
                 }
@@ -1070,7 +1070,7 @@ function handle_command($input, $commandnum) {
 
             if (!$isadmin) {
                 switch ($videoannotation->groupmode) {
-                    // Case 1: group mode is off
+                    // Case 1: group mode is off.
 
                     case NOGROUPS:
                         // The event must belong to the requestor and not a group.
@@ -1087,7 +1087,7 @@ function handle_command($input, $commandnum) {
 
                         break;
 
-                    // Case 2: group mode is "separate" or "visible"
+                    // Case 2: group mode is "separate" or "visible".
 
                     case VIDEOANNOTATION_GROUPMODE_USER_USER:
                     case VIDEOANNOTATION_GROUPMODE_GROUP_USER:
@@ -1119,7 +1119,7 @@ function handle_command($input, $commandnum) {
 
                         break;
 
-                    // Case 3: group mode is something else
+                    // Case 3: group mode is something else.
 
                     default:
                         // Complain and abort.

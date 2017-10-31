@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -118,36 +117,36 @@ class moodle1_mod_videoannotation_handler extends moodle1_mod_handler {
      * This is executed when we reach the closing </MOD> tag of our 'videoannotation' path
      */
     public function on_videoannotation_end($data) {
-        // resume writing videoannotation.xml
+        // Resume writing videoannotation.xml
 
         $this->xmlwriter->begin_tag('clips');
         if (isset($this->clips[$data['id']])) {
             foreach ($this->clips[$data['id']] as $clipid => $clip) {
                 $this->xmlwriter->begin_tag('clip', array('id' => $clipid));
 
-                // Write clip
+                // Write clip.
 
                 $this->write_full_tag($clip);
 
-                // Write tags
+                // Write tags.
 
                 $this->xmlwriter->begin_tag('tags');
                 if (isset($this->tags[$clipid])) {
                     foreach ($this->tags[$clipid] as $tagid => $tag) {
                         $this->xmlwriter->begin_tag('tag', array('id' => $tagid));
 
-                        // Write tag
+                        // Write tag.
 
                         $this->write_full_tag($tag);
 
-                        // Write events
+                        // Write events.
 
                         $this->xmlwriter->begin_tag('events');
                         if (isset($this->events[$tagid])) {
                             foreach ($this->events[$tagid] as $eventid => $event) {
                                 $this->xmlwriter->begin_tag('event', array('id' => $eventid));
 
-                                // Write event
+                                // Write event.
 
                                 $this->write_full_tag($event);
 
@@ -161,14 +160,14 @@ class moodle1_mod_videoannotation_handler extends moodle1_mod_handler {
                 }
                 $this->xmlwriter->end_tag('tags');
 
-                // Write submissions
+                // Write submissions.
 
                 $this->xmlwriter->begin_tag('submissions');
                 if (isset($this->submissions[$clipid])) {
                     foreach ($this->submissions[$clipid] as $submissionid => $submission) {
                         $this->xmlwriter->begin_tag('submission', array('id' => $submissionid));
 
-                        // Write submission
+                        // Write submission.
 
                         $this->write_full_tag($submission);
 
@@ -182,12 +181,12 @@ class moodle1_mod_videoannotation_handler extends moodle1_mod_handler {
         }
         $this->xmlwriter->end_tag('clips');
 
-        // finish writing videoannotation.xml
+        // Finish writing videoannotation.xml
         $this->xmlwriter->end_tag('videoannotation');
         $this->xmlwriter->end_tag('activity');
         $this->close_xml_writer();
 
-        // write inforef.xml
+        // Write inforef.xml
         $this->open_xml_writer("activities/videoannotation_{$this->moduleid}/inforef.xml");
         $this->xmlwriter->begin_tag('inforef');
         $this->xmlwriter->begin_tag('fileref');
@@ -205,22 +204,22 @@ class moodle1_mod_videoannotation_handler extends moodle1_mod_handler {
     public function process_videoannotation($data, $raw) {
         global $CFG;
 
-        // Translate group mode
+        // Translate group mode.
 
         if (isset($data['groupmode'])) {
             $data['groupmode'] = $this->get_group_mode($data['groupmode']);
         }
 
-        // get the course module id and context id
+        // Get the course module id and context id.
         $instanceid     = $data['id'];
         $cminfo         = $this->get_cminfo($instanceid);
         $this->moduleid = $cminfo['id'];
         $contextid      = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
 
-        // get a fresh new file manager for this instance
+        // Get a fresh new file manager for this instance.
         $this->fileman = $this->converter->get_file_manager($contextid, 'mod_videoannotation');
 
-        // convert course files embedded into the intro
+        // Convert course files embedded into the intro.
         $this->fileman->filearea = 'intro';
         $this->fileman->itemid   = 0;
         $data['intro'] = moodle1_converter::migrate_referenced_files($data['intro'], $this->fileman);
@@ -231,7 +230,7 @@ class moodle1_mod_videoannotation_handler extends moodle1_mod_handler {
             $data['introformat'] = FORMAT_HTML;
         }
 
-        // start writing videoannotation.xml
+        // Start writing videoannotation.xml
         $this->open_xml_writer("activities/videoannotation_{$this->moduleid}/videoannotation.xml");
         $this->xmlwriter->begin_tag('activity', array('id' => $instanceid, 'moduleid' => $this->moduleid,
             'modulename' => 'videoannotation', 'contextid' => $contextid));
@@ -253,7 +252,7 @@ class moodle1_mod_videoannotation_handler extends moodle1_mod_handler {
 
     public function process_videoannotation_clips($data) {
         // Do nothing
-        // This function must be defined or the call to convert_path->validate_pobject() will complain
+        // This function must be defined or the call to convert_path->validate_pobject() will complain.
     }
 
     public function process_videoannotation_event($data) {
@@ -265,21 +264,21 @@ class moodle1_mod_videoannotation_handler extends moodle1_mod_handler {
 
     public function process_videoannotation_events($data) {
         // Do nothing
-        // This function must be defined or the call to convert_path->validate_pobject() will complain
+        // This function must be defined or the call to convert_path->validate_pobject() will complain.
     }
 
     public function process_videoannotation_submission($data) {
-      $submission = json_decode(json_encode($data), true);
-      $clipid = $submission['clipid'];
-      unset($submission['clipid']);
-      $submissionid = $submission['id'];
-      unset($submission['id']);
-      $this->submissions[$clipid][$submissionid] = $submission;
+        $submission = json_decode(json_encode($data), true);
+        $clipid = $submission['clipid'];
+        unset($submission['clipid']);
+        $submissionid = $submission['id'];
+        unset($submission['id']);
+        $this->submissions[$clipid][$submissionid] = $submission;
     }
 
     public function process_videoannotation_submissions($data) {
         // Do nothing
-        // This function must be defined or the call to convert_path->validate_pobject() will complain
+        // This function must be defined or the call to convert_path->validate_pobject() will complain.
     }
 
     public function process_videoannotation_tag($data) {
@@ -293,7 +292,7 @@ class moodle1_mod_videoannotation_handler extends moodle1_mod_handler {
 
     public function process_videoannotation_tags($data) {
         // Do nothing
-        // This function must be defined or the call to convert_path->validate_pobject() will complain
+        // This function must be defined or the call to convert_path->validate_pobject() will complain.
     }
 
     private function write_full_tag($data) {

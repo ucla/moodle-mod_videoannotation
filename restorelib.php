@@ -20,6 +20,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+
 function videoannotation_restore_mods($mod, $restore) {
     global $CFG;
 

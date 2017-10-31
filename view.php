@@ -61,7 +61,6 @@ $PAGE->set_pagetype('course');
 $PAGE->set_heading($course->fullname);
 $PAGE->set_button($OUTPUT->update_module_button($cm->id, 'videoannotation'));
 echo $OUTPUT->header();
-// SSC-829
 // The user must have mod/videoannotation:view capability to view this page.
 // This implies that users not logged in or are guests cannot view this page.
 
@@ -79,17 +78,6 @@ $event = \mod_videoannotation\event\course_module_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot($PAGE->cm->modname, $videoannotation);
 $event->trigger();
-
-// SSC-1058
-// If group mode = NOGROUPS:
-//   * needs to have "manage" capability (then we use the given user ID) or "view" capability (then we use this user's ID)
-//   * ignore the group ID passed in and treat groupid = null
-// If group mode = SEPARATEGROUPS or VISIBLEGROUPS:
-//   * deny access unless user has "manage" or "view" capability
-//   * "manage": if groupid given, then use that group, else use the first group in the course; there must be at least
-//      one group in the course
-//   * "view": if groupid given, then use that group, else use the first group the user is in; the user must be in this
-//      group and there must be at least one group in the course.
 
 switch ($videoannotation->groupmode) {
     case NOGROUPS:
@@ -194,7 +182,6 @@ if ($videoannotation->groupmode == NOGROUPS) {
      'groupid' => $groupid));
 }
 
-// SSC-1185 Fix $readonly to be true for certain users if the annotation has been submitted.
 if (!$isadmin and !$canmanage) {
     $readonly = ($readonly or $submission);
 }
@@ -245,7 +232,9 @@ foreach ($CFG->tnapermalinkurl as $idx => $tnapermalinkurl) {
             $content = file_get_contents($CFG->tnawebserviceurl[$idx] . '?action=uuidToFileName&uuid=' . urlencode($uuid));
             $contentobj = json_decode($content);
             if (preg_match('/^(\d{4})\-(\d{2})\-(\d{2})_(\d{2})(\d{2})/', $contentobj->filename, $matches)) {
-                $rtmpurl = $CFG->tnastreamerurl . "/{$matches[1]}/{$matches[1]}-{$matches[2]}/{$matches[1]}-{$matches[2]}-{$matches[3]}/" . basename($contentobj->filename, '.txt') . '.mp4';
+                $rtmpurl = $CFG->tnastreamerurl .
+                        "/{$matches[1]}/{$matches[1]}-{$matches[2]}/{$matches[1]}-{$matches[2]}-{$matches[3]}/" .
+                        basename($contentobj->filename, '.txt') . '.mp4';
                 $clip->url = $rtmpurl;
                 break;
             }
@@ -274,7 +263,7 @@ if (has_capability('mod/videoannotation:submit', $modulecontext) &&
 
 // After submitting, no one should be able to edit the annotations.
 if ($submission) {
-   $readonly = true;
+    $readonly = true;
 }
 
 // Print the main part of the page.
@@ -288,16 +277,11 @@ if (optional_param('printable', false, PARAM_BOOL)) {
     echo "<a href='?id=" . $id . "'>Exit Full Screen</a>";
 } else {
     echo "<a href='?id=" . $id . "&printable=1'>Full Screen</a>";
-    //echo "<br />";
+    // echo "<br />";
     echo "<div id='groupmodetext'></div>";
-    // SSC-1176
-    // Adding a list of the last few changes made by other users.
     echo "<div id='lastchanges'></div>";
-    // SSC-1191: add a notification when the clip has changed.
     echo "<div id='clipchanged'></div>";
 
-    // SSC-1084.
-    // Print description/instruction field.
     echo "<br />";
     echo $videoannotation->intro;
 }
@@ -359,7 +343,6 @@ if (!optional_param('printable', false, PARAM_BOOL)) {
     <?php
     endif;
 
-    // SSC-1190: adding annotation import link.
     ?>
     <a href='import.php?id=<?php echo $id; ?>&group=<?php echo $groupid; ?>'>
         <?php echo get_string('importannotation', 'videoannotation'); ?></a>
@@ -423,7 +406,7 @@ if (!optional_param('printable', false, PARAM_BOOL)) {
                 </td>
             </tr>
             <tr>
-                <td>Existing feedback: 
+                <td>Existing feedback:
                 <td>
                     <?php echo isset($submission->gradecomment) ? $submission->gradecomment : '(none)'; ?>
                 </td>
@@ -457,7 +440,7 @@ if (!optional_param('printable', false, PARAM_BOOL)) {
     echo '</div>';
 }
 
-//  If no clip is defined , show a message and (if the user has not submitted) show the option to add one.
+// If no clip is defined , show a message and (if the user has not submitted) show the option to add one.
 
 if (!$clip):
 ?>
@@ -491,9 +474,9 @@ if ($clip and $videoannotation->clipselect == 0 and !$submission):
 
     <div style='text-align: right'>
         <input type="button" class="playerbutton dark"
-        onclick="window.location='clips.php?id=<?php 
+        onclick="window.location='clips.php?id=<?php
         echo $id;
-        echo ($groupid ? '&group=' . $groupid : ''); ?>'" value="<?php 
+        echo ($groupid ? '&group=' . $groupid : ''); ?>'" value="<?php
         echo get_string('editclip', 'videoannotation'); ?>"/>
     </div>
 
@@ -515,7 +498,7 @@ if ($clip): ?>
     <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?&sensor=false">
     </script>
-    <script src="geotag.js" type="text/javascript"></script> 
+    <script src="geotag.js" type="text/javascript"></script>
     <script src="timeline.js" type="text/javascript"></script>
     <script src="jquery.validate.js" type="text/javascript"></script>
     <script src="jquery.text-overflow.min.js" type="text/javascript"></script>
@@ -566,7 +549,7 @@ if ($clip): ?>
 
             if (upJWPlayer) {
                 if (jwplayer().getState() != 'BUFFERING') {
-                    if (typeof lastSeekCallTime == 'undefined' || new Date().getTime() - lastSeekCallTime >= 200) {                            
+                    if (typeof lastSeekCallTime == 'undefined' || new Date().getTime() - lastSeekCallTime >= 200) {
                         jwplayer().seek(currentTime);
 
                         lastSeekCallTime = new Date().getTime();
@@ -669,7 +652,7 @@ if ($clip): ?>
         });
 
         timeline.addListener("tagAdded", function(tagObj) {
-            var name = tagObj.name; 
+            var name = tagObj.name;
             if (name == undefined)
                 return;
             if (name.length > 22)
@@ -683,7 +666,7 @@ if ($clip): ?>
         });
 
         timeline.addListener("tagRemoved", function(tagName, conflict) {
-            var name = tagName; 
+            var name = tagName;
             if (name == undefined)
                 return;
             if (name.length > 22)
@@ -700,10 +683,10 @@ if ($clip): ?>
             jQuery("#lastchanges").html("Last Changes: " + str);
         });
 
-        //SSC-1191: add a notification when the clip has changed.
-
         timeline.addListener("clipChanged", function() {
-            jQuery("#clipchanged").html("<span style=\"color:red\">The clip has been modified! Please reload the page to refresh the clip.</span>");
+            jQuery("#clipchanged").
+                    html("<span style=\"color:red\">The clip has been modified! \n\
+                        Please reload the page to refresh the clip.</span>");
         });
 
         // Scrub slider.
@@ -844,13 +827,17 @@ if ($clip): ?>
         var enableControls = function() {
             jQuery("#flashPlayerScrubBar,#flashPlayerVolumeBar").slider("enable");
             jQuery("#flashPlayerVolumeBar").slider("option", "value", jwplayer().getMute() ? 0 : jwplayer().getVolume());
-            jQuery("#rewindbutton,#backward30button,#backward5button,#forward025button,#forward05button,#forward1button,#forward5button,#forward30button").removeAttr("disabled");
+            jQuery(
+                "#rewindbutton,#backward30button,#backward5button,#forward025button,#forward05button,#forward1button,#forward5button,#forward30button").
+                removeAttr("disabled");
         };
 
         var disableControls = function() {
             jQuery("#flashPlayerScrubBar,#flashPlayerVolumeBar").slider("disable");
             jQuery("#playpausebutton").find(".IconPlay").removeClass("IconPause").addClass("IconPlay");
-            jQuery("#rewindbutton,#backward30button,#backward5button,#forward025button,#forward05button,#forward1button,#forward5button,#forward30button").attr("disabled", "disabled");
+            jQuery(
+                "#rewindbutton,#backward30button,#backward5button,#forward025button,#forward05button,#forward1button,#forward5button,#forward30button").
+                attr("disabled", "disabled");
         };
 
         disableControls();
@@ -891,7 +878,7 @@ if ($clip): ?>
                     jQuery("#playpausebutton").find(".IconPause").removeClass("IconPause").addClass("IconPlay");
                 },
 
-                onPlay: function(evt) {                        
+                onPlay: function(evt) {
                     // Enable controls.
 
                     enableControls();
@@ -924,7 +911,7 @@ if ($clip): ?>
                     updateJWPlayerControls(evt.position);
                     updateTimeline(evt.position);
 
-                    // SSC-995: Show text of "current" events in divs under #textbox.
+                    // Show text of "current" events in divs under #textbox.
 
                     var prevPlayingEvents = (typeof timeline.playingEvents != "undefined" ? timeline.playingEvents : []);
                     var currentPlayingEvents = [];
@@ -940,7 +927,9 @@ if ($clip): ?>
                     for (var idx in currentPlayingEvents) {
                         if (timeline.inArray(currentPlayingEvents[idx], prevPlayingEvents,
                             function (a,b) {return a.getId() == b.getId();}) === undefined) {
-                            jQuery("#textbox").append("<div id='textboxitem_event" + currentPlayingEvents[idx].getId() + "' style='padding: 3px;'><span></span>: <span style='font-size: 85%'></span></div>");
+                            jQuery("#textbox").
+                                    append("<div id='textboxitem_event" + currentPlayingEvents[idx].getId() +
+                                            "' style='padding: 3px;'><span></span>: <span style='font-size: 85%'></span></div>");
                             jQuery("#textboxitem_event" + currentPlayingEvents[idx].getId())
                             .css("background-color", currentPlayingEvents[idx].getTag().getColor() || "gray")
                             .css("color", "white")
@@ -994,7 +983,7 @@ if ($clip): ?>
             if (startflag) {
                 jwplayer().seek(Number(<?php echo $starttime;?>));
                 startflag = false;
-            }          
+            }
         });
     });
 

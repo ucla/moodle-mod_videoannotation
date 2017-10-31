@@ -37,15 +37,17 @@
  *             See lib/weblib.php Constants and the format_text()
  *             function for more info
  */
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
 class mod_videoannotation_mod_form extends moodleform_mod {
 
-    function data_preprocessing(&$defaultvalues) {
+    public function data_preprocessing(&$defaultvalues) {
         parent::data_preprocessing($defaultvalues);
         global $DB;
         // If clip select is "instructor picks clip", load that clip's info
-        // because it needs to appear in the add/update activity screen
+        // because it needs to appear in the add/update activity screen.
 
         if (isset($defaultvalues['clipselect']) and $defaultvalues['clipselect'] == 1 and $clip = $DB->get_record('videoannotation_clips',
                 array('videoannotationid' => $defaultvalues['id'], 'userid' => null, 'groupid' => null))) {
@@ -68,14 +70,14 @@ class mod_videoannotation_mod_form extends moodleform_mod {
         }
     }
 
-    function definition() {
+    public function definition() {
         global $CFG, $COURSE, $DB;
         $mform = & $this->_form;
 
-        // Adding the "general" fieldset, where all the common settings are showed
+        // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        // Adding the standard "name" field
+        // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('videoannotationname', 'videoannotation'), array('size' => '64'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
@@ -85,47 +87,44 @@ class mod_videoannotation_mod_form extends moodleform_mod {
         // DEPRECATED with upgrade to Moodle2.3
         /* $mform->addElement('htmleditor', 'intro', get_string('videoannotationintro', 'videoannotation'));
           $mform->setType('intro', PARAM_RAW); */
-        $this->add_intro_editor(true, get_string('videoannotationintro', 'videoannotation'));
+        $this->standard_intro_elements(get_string('videoannotationintro', 'videoannotation'));
         $mform->addHelpButton('introeditor', 'introeditor', 'videoannotation');
 
-        // Clip header
+        // Clip header.
 
         $mform->addElement('header', 'clip', get_string('clip', 'videoannotation'));
 
-        // Clip source
-
+        // Clip source.
         $mform->addElement('select', 'clipselect', get_string('clipselect', 'videoannotation'),
                 array(get_string('studentspickownclips', 'videoannotation'), get_string('usespecifiedclip', 'videoannotation')));
         $mform->addRule('clipselect', null, 'required', null, 'client');
         $mform->setDefault('clipselect', 0);
 
-        // Clip URL
-
+        // Clip URL.
         $mform->addElement('text', 'clipurl', get_string('clipurl', 'videoannotation'));
         $mform->setDefault('clipurl', '');
         $mform->disabledIf('clipurl', 'clipselect', 'eq', 0);
         $mform->setType('clipurl', PARAM_TEXT);
 
-        // Playable start time
-
+        // Playable start time.
         $mform->addElement('text', 'playabletimestart', get_string('playabletimestart', 'videoannotation'));
         $mform->setDefault('playabletimestart', '0');
         $mform->disabledIf('playabletimestart', 'clipselect', 'eq', 0);
         $mform->setType('playabletimestart', PARAM_INT);
-        // Playable end time
 
+        // Playable end time.
         $mform->addElement('text', 'playabletimeend', get_string('playabletimeend', 'videoannotation'));
         $mform->setDefault('playabletimeend', '');
         $mform->disabledIf('playabletimeend', 'clipselect', 'eq', 0);
         $mform->setType('playabletimeend', PARAM_INT);
-        // Video width
 
+        // Video width.
         $mform->addElement('text', 'videowidth', get_string('videowidth', 'videoannotation'));
         $mform->setDefault('videowidth', '448');
         $mform->disabledIf('videowidth', 'clipselect', 'eq', 0);
         $mform->setType('videowidth', PARAM_INT);
-        // Video height
 
+        // Video height.
         $mform->addElement('text', 'videoheight', get_string('videoheight', 'videoannotation'));
         $mform->setDefault('videoheight', '336');
         $mform->disabledIf('videoheight', 'clipselect', 'eq', 0);
@@ -136,11 +135,11 @@ class mod_videoannotation_mod_form extends moodleform_mod {
 
         $mform->addElement('html', '<div id="flashPlayerArea1"><div id="flashPlayerArea2"></div></div>');
 
-        // Group header
+        // Group header.
 
         /* $mform->addElement('header', 'group', get_string('group', 'videoannotation'));
 
-          // Group mode
+          // Group mode.
 
           $groupmodes = array(
           NOGROUPS => get_string('groupmodeoff', 'videoannotation'),
@@ -152,7 +151,7 @@ class mod_videoannotation_mod_form extends moodleform_mod {
           VIDEOANNOTATION_GROUPMODE_ALL_ALL => get_string('groupmodeallall', 'videoannotation'),
           );
 
-          // Hide options that are not read for use yet
+          // Hide options that are not read for use yet.
 
           unset($groupmodes[VIDEOANNOTATION_GROUPMODE_USER_USER]);
           unset($groupmodes[VIDEOANNOTATION_GROUPMODE_ALL_USER]);
@@ -185,7 +184,8 @@ class mod_videoannotation_mod_form extends moodleform_mod {
         // -------------------------------------------------------------------------------
         // add standard elements, common to all modules
         // Moodle 1.9 code, deprecated
-        //$this->standard_coursemodule_elements(array('groups' => false, 'groupings' => true, 'groupmembersonly' => true));
+
+        // $this->standard_coursemodule_elements(array('groups' => false, 'groupings' => true, 'groupmembersonly' => true));
         $this->_features->groups = true;
         $this->_features->groupings = true;
         $this->_features->groupmembersonly = true;
@@ -194,16 +194,13 @@ class mod_videoannotation_mod_form extends moodleform_mod {
         // add standard buttons, common to all modules
         $this->add_action_buttons();
 
-        // SSC-568,668,799
-        // Insert JavaScript code for JWPlayer and the preview logic into the form
-
         $mform->addElement('html', '<script type="text/javascript" src="' . $CFG->wwwroot . '/mod/videoannotation/jquery-ui-1.8.2.custom/js/jquery-1.4.2.min.js"></script>');
         $mform->addElement('html', '<script type="text/javascript" src="' . $CFG->wwwroot . '/mod/videoannotation/jwplayer-6.12/jwplayer.js"></script>' . "\n");
         $mform->addElement('html', '<script type="text/javascript">wwwroot = "' . $CFG->wwwroot . '";</script>' . "\n");
         $mform->addElement('html', '<script type="text/javascript" src="' . $CFG->wwwroot . '/mod/videoannotation/mod_form_js.php"></script>' . "\n");
     }
 
-    function validation($data, $files) {
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
         if ($data['clipselect'] == 1) {
@@ -211,7 +208,7 @@ class mod_videoannotation_mod_form extends moodleform_mod {
                 $errors['clipurl'] = get_string('err_required', 'form');
             }
             if (!($data['playabletimestart'] < $data['playabletimeend'])) {
-                $errors['playabletimestart'] = $errors['playabletimeend'] = 
+                $errors['playabletimestart'] = $errors['playabletimeend'] =
                         get_string('playabletimestart', 'videoannotation') . ' ' . get_string('mustbelessthan', 'videoannotation')
                         . ' ' . get_string('playabletimeend', 'videoannotation');
             }

@@ -48,7 +48,7 @@ class backup_videoannotation_activity_structure_step extends backup_activity_str
         // Define the root element describing the videoannotation instance.
         $videoannotation = new backup_nested_element('videoannotation', array('id'), array('name', 'intro', 'introformat',
                 'clipselect', 'groupmode', 'timecreated', 'timemodified'));
-        
+
         $locks = new backup_nested_element('locks');
 
         $lock = new backup_nested_element('lock', array('id'), array('userid', 'groupid', 'locktype', 'timecreated',
@@ -66,7 +66,7 @@ class backup_videoannotation_activity_structure_step extends backup_activity_str
 
         $tags = new backup_nested_element('tags');
 
-        $tag = new backup_nested_element('tag', array('id'), array('userid', 'groupid', 'name', 'color', 'sortorder', 
+        $tag = new backup_nested_element('tag', array('id'), array('userid', 'groupid', 'name', 'color', 'sortorder',
                 'timecreated', 'timemodified'));
 
         $events = new backup_nested_element('events');
@@ -88,7 +88,7 @@ class backup_videoannotation_activity_structure_step extends backup_activity_str
 
         // Define data sources.
         $videoannotation->set_source_table('videoannotation', array('id' => backup::VAR_ACTIVITYID));
-         
+
         if ($userinfo) {
             $lock->set_source_table('videoannotation_locks', array('videoannotationid' => backup::VAR_PARENTID));
             $clip->set_source_table('videoannotation_clips', array('videoannotationid' => backup::VAR_PARENTID));

@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 $plugin->version    = 2017022400;  // The current module version (Date: YYYYMMDDXX)
 $plugin->cron       = 0;           // Period for cron to check this module (secs)
 $plugin->component  = 'mod_videoannotation';

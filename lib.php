@@ -28,6 +28,7 @@
  *     help to save some memory when Moodle is performing
  *     actions across all modules.
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once('locallib.php');
 
@@ -293,7 +294,7 @@ function videoannotation_user_complete($course, $user, $mod, $videoannotation) {
  * @todo Finish documenting this function
  */
 function videoannotation_print_recent_activity($course, $isteacher, $timestart) {
-    return false;  //  True if anything was printed, otherwise false.
+    return false;  // True if anything was printed, otherwise false.
 }
 
 /**

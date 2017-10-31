@@ -30,9 +30,9 @@
  * @category  backup
  * @copyright 2016 UC Regents
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */ 
-class restore_videoannotation_activity_structure_step extends restore_activity_structure_step {
+ */
 
+class restore_videoannotation_activity_structure_step extends restore_activity_structure_step {
     /**
      * Defines structure of path elements to be processed during the restore
      *
@@ -67,7 +67,7 @@ class restore_videoannotation_activity_structure_step extends restore_activity_s
         $data = (object)$data;
         $oldid = $data->id;
         $data->course = $this->get_courseid();
-        
+
         $data->timecreated = time();
         $data->timemodified = time();
 
@@ -81,7 +81,7 @@ class restore_videoannotation_activity_structure_step extends restore_activity_s
 
         $data = (object)$data;
         $oldid = $data->id;
-        
+
         $data->videoannotationid = $this->get_new_parentid('videoannotation');
         $data->timecreated = time();
         $data->timemodified = time();
