@@ -2,7 +2,7 @@
 
 The video annotation activity allows students to place tags directly to an online streaming video clip from YouTube or the Communication Studies Digital Archive (https://tvnews.sscnet.ucla.edu/public/). 
 
-Instructors have two options when setting up this activity: students can pick a clip themselves or instructors as can assign a clip for the students to watch. Each student will then go in and provide his or her annotations to submit for a grade. 
+Instructors have two options when setting up this activity: students can pick a clip themselves or instructors as can assign a clip for the students to watch. Each student will then go in and provide his or her annotations to submit for a grade. For a quick overview on how to use the Video Annotation tool as a student, please view this 3:30mins YouTube video: https://www.youtube.com/watch?v=i26QSgk3IkI&t=8s.
 
 # Installation
 
