@@ -784,7 +784,7 @@ jQuery('#TimelineBase_Timeline' + this.id).append('<div id="test"></div>');
     
         // Create the tag band and event band if they're not there
         
-        if (jQuery('#TagEventBand_Tag' + tagId + '_Timeline' + this.id).size() == 0) {
+        if (jQuery('#TagEventBand_Tag' + tagId + '_Timeline' + this.id).length == 0) {
             var str = '';
             str += '<div id="TagEventBand_Tag' + tagId + '_Timeline' + this.id + '" class="TagEventBand" style="">';
             str += '    <div id="TagBand_Tag' + tagId + '_Timeline' + this.id + '" class="TagBand" title="Double-click to edit this tag; drag to reorder this tag">';
@@ -797,7 +797,7 @@ jQuery('#TimelineBase_Timeline' + this.id).append('<div id="test"></div>');
             // Or, if no tag event band exists, add after the time marker digit panel
             
             var lastTagEventBand = jQuery('#TimelineBase_Timeline' + timeline.id).find('.TagEventBand').last();
-            if (lastTagEventBand.size() > 0) {
+            if (lastTagEventBand.length > 0) {
                 lastTagEventBand.after(str);
             } else {
                 jQuery('#TimeMarkerDigitPanel_Timeline' + this.id).after(str);
@@ -879,7 +879,7 @@ jQuery('#TimelineBase_Timeline' + this.id).append('<div id="test"></div>');
         && typeof this.editTagDialogOpen[tagId] !== "undefined" 
         && this.editTagDialogOpen[tagId]
         && !this.readOnly) {
-            if (jQuery('#EditTagDialog_Tag' + tagId + '_Timeline' + this.id).size() == 0) {
+            if (jQuery('#EditTagDialog_Tag' + tagId + '_Timeline' + this.id).length == 0) {
                 var str = '';
                 str += '<table id="EditTagDialog_Tag' + tagId + '_Timeline' + this.id + '" class="EditTagDialog">';
                 str += '    <tr>';
@@ -1048,7 +1048,7 @@ jQuery('#TimelineBase_Timeline' + this.id).append('<div id="test"></div>');
 
         // If tag dialog not requested, show the tag name, start/stop buttons, checkbox (if bulk mode is on).
         } else {
-            if (jQuery('#TagControls_Tag' + tagId + '_Timeline' + this.id).size() == 0) {
+            if (jQuery('#TagControls_Tag' + tagId + '_Timeline' + this.id).length == 0) {
                 var str = '';
                 str += '<div id="TagControls_Tag' + tagId + '_Timeline' + this.id + '" class="TagControls"></div>';
                 str += '<input type="checkbox" id="TagCheckbox_Tag' + tagId + '_Timeline' + this.id + '" class="TagCheckbox" />';
@@ -1249,7 +1249,7 @@ jQuery('#TimelineBase_Timeline' + this.id).append('<div id="test"></div>');
         // If Add Tag dialog does not exist,
         // create and initialize it
         
-        if (jQuery('#AddTagDialog_Timeline' + this.id).size() == 0) {
+        if (jQuery('#AddTagDialog_Timeline' + this.id).length == 0) {
             // Create the Add Tag dialog
             
             var str = '';
@@ -1386,7 +1386,7 @@ jQuery('#TimelineBase_Timeline' + this.id).append('<div id="test"></div>');
             console.log("eventId", eventId);
             
             // If Edit Event dialog does not exist, create it. If the dialog does exist, and sameTag is defined, you are switching the editDialog to another event in the same tag.
-            if (jQuery('#EditEventDialog_Tag' + tagId + '_Timeline' + this.id).size() == 0 || (sameTag !== undefined && timeline.findEvent(sameTag).getTag().getId() == tagId)) {
+            if (jQuery('#EditEventDialog_Tag' + tagId + '_Timeline' + this.id).length == 0 || (sameTag !== undefined && timeline.findEvent(sameTag).getTag().getId() == tagId)) {
                 // Find the previous and next events by passing by reference into sortEvent(), which is also used elsewhere.
                 
                 var eventsForThisTag = {list: []};
@@ -1941,7 +1941,7 @@ console.log("scope=%s", eventObj.getScope());
             var eventId = this.viewEventDialogOpen[tagId];
             var eventObj = this.findEvent(eventId);
 
-            if (jQuery('#ViewEventDialog_Tag' + tagId + '_Timeline' + this.id).size() == 0 ||
+            if (jQuery('#ViewEventDialog_Tag' + tagId + '_Timeline' + this.id).length == 0 ||
                     (sameTag !== undefined && timeline.findEvent(sameTag).getTag().getId() == tagId)) {
                 var eventsForThisTag = {list: []};
                 var prevEventId = {id : undefined};
@@ -2196,7 +2196,7 @@ console.log("scope=%s", eventObj.getScope());
             
             // Create event bar (if it does not exist) for this event
             
-            if (jQuery('#EventBar_Event' + eventId + '_Timeline' + this.id).size() == 0) {
+            if (jQuery('#EventBar_Event' + eventId + '_Timeline' + this.id).length == 0) {
                 var str = '';
                 str += '<div id="EventBar_Event' + eventId + '_Timeline' + this.id +'" class="EventBar" title="Double-click to edit event; drag left or right edge to resize">';
                 str += '<div id="EventBarText_Event' + eventId + '_Timeline' + this.id +'" class="EventBarText"></div>';
@@ -2275,7 +2275,7 @@ console.log("scope=%s", eventObj.getScope());
                         if (typeof timeline.viewEventDialogOpen === 'undefined') {
                             timeline.viewEventDialogOpen = {};
                         }
-                        if (jQuery('#ViewEventDialog_Tag' + eventObj.getTag().getId() + '_Timeline' + timeline.id).size() !== 0) {
+                        if (jQuery('#ViewEventDialog_Tag' + eventObj.getTag().getId() + '_Timeline' + timeline.id).length !== 0) {
                             sameTag = timeline.viewEventDialogOpen[eventObj.getTag().getId()];
                         }
                         timeline.viewEventDialogOpen[eventObj.getTag().getId()] = eventId;
@@ -2295,7 +2295,7 @@ console.log("scope=%s", eventObj.getScope());
                         }
                         timeline.selectEvent(eventObj);
                                 timeline.setCurrentTime(eventObj.getStartTime(), true);
-                        if(jQuery('#EditEventDialog_Tag' + eventObj.getTag().getId() + '_Timeline' + timeline.id).size() !== 0) {
+                        if(jQuery('#EditEventDialog_Tag' + eventObj.getTag().getId() + '_Timeline' + timeline.id).length !== 0) {
                             sameTag = timeline.editEventDialogOpen[eventObj.getTag().getId()];
                         }
                         timeline.sendMessage(timeline, 'timeChanged', eventObj.getStartTime());

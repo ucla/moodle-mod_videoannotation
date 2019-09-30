@@ -78,6 +78,7 @@ $string['validationpositivenum'] = 'This must be a non-negative number.';
 $string['validationpositiveint'] = 'This must be a non-negative integer.';
 $string['mustbelessthan'] = 'must be less than';
 
+$string['videoannotation:addinstance'] = 'Add a new video annotation activity';
 $string['videoannotation:grade'] = 'Grade video annotations';
 $string['videoannotation:view'] = 'View video annotation';
 $string['videoannotation:add'] = 'Add video annotation';
@@ -108,7 +109,7 @@ $string['color'] = 'Color';
 $string['scope'] = 'Scope';
 $string['latitude'] = 'Latitude';
 $string['longitude'] = 'Longitude';
-	
+
 $string['importannotation'] = 'Import Annotation';
 $string['importfile'] = 'Select a \".csv\" File:';
 $string['cantimport'] = 'You can\'t import a file for this annotation becuase either the annotation has already been submitted or you don\'t have sufficient permissions.';
@@ -140,4 +141,5 @@ $string['importsyntax'] = 'The import file contains sytax errors';
 
 $string['tnastreamerurl'] = 'TNA Streamer URL';
 $string['tnastreamerurl_desc'] = '';
-?>
+
+$string['search:activity'] = 'Video annotation - activity information';

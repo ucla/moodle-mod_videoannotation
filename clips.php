@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-    require_once("../../config.php");
-    require_once("lib.php");
-    require_once($CFG->libdir.'/moodlelib.php');
-    require_once($CFG->dirroot .'/lib/formslib.php');
+require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
+require_once($CFG->libdir.'/moodlelib.php');
+require_once($CFG->dirroot .'/lib/formslib.php');
 
-    $id   = optional_param('id', 0, PARAM_INT);          // Course module ID
-    $a    = optional_param('a', 0, PARAM_INT);           // Video annotation ID
-    $mode = optional_param('mode', 'all', PARAM_ALPHA);  // What mode are we in?
-    $groupid = optional_param('group', null, PARAM_INT);
-    $isadmin = is_siteadmin();
-    global $DB;
+$id   = optional_param('id', 0, PARAM_INT);          // Course module ID
+$a    = optional_param('a', 0, PARAM_INT);           // Video annotation ID
+$mode = optional_param('mode', 'all', PARAM_ALPHA);  // What mode are we in?
+$groupid = optional_param('group', null, PARAM_INT);
+$isadmin = is_siteadmin();
+
+global $DB;
+
 if ($id) {
     if (! $cm = get_coursemodule_from_id('videoannotation', $id)) {
         print_error('coursemodidincorrect', 'videoannotation');
@@ -49,19 +51,17 @@ if ($id) {
     }
 }
 
-    // Print page header.
-    $strvideoannotations = get_string('modulenameplural', 'videoannotation');
-    $strvideoannotation  = get_string('modulename', 'videoannotation');
-    require_login($course->id, false, $cm);
-    $PAGE->set_url('/mod/videoannotation/clips.php', array('id' => $cm->id));
-    $PAGE->set_heading('');
-    $PAGE->set_title(format_string($videoannotation->name));
-    $PAGE->set_button($OUTPUT->update_module_button($cm->id, 'videoannotation'));
-    echo $OUTPUT->header();
-    $modulecontext = context_module::instance($cm->id);
-    require_capability('mod/videoannotation:view', $modulecontext);
+// Print page header.
+$strvideoannotations = get_string('modulenameplural', 'videoannotation');
+$strvideoannotation  = get_string('modulename', 'videoannotation');
+require_login($course->id, false, $cm);
+$PAGE->set_url('/mod/videoannotation/clips.php', array('id' => $cm->id));
+$PAGE->set_heading('');
+$PAGE->set_title(format_string($videoannotation->name));
+$modulecontext = context_module::instance($cm->id);
+require_capability('mod/videoannotation:view', $modulecontext);
 
-    add_to_log($course->id, "videoannotation", "view", "view.php?id=$cm->id", "$videoannotation->id");
+add_to_log($course->id, "videoannotation", "view", "view.php?id=$cm->id", "$videoannotation->id");
 
 if ($videoannotation->groupmode == NOGROUPS) {
     $groupid = null;
@@ -77,7 +77,7 @@ if ($videoannotation->groupmode == NOGROUPS) {
     $clip = $DB->get_record('videoannotation_clips', array('videoannotationid' => $videoannotation->id, 'groupid' => $groupid));
 }
 
-class clip_form extends moodleform{
+class clip_form extends moodleform {
     public function definition() {
         global $COURSE, $CFG;
         $mform = & $this->_form;
@@ -102,6 +102,7 @@ class clip_form extends moodleform{
         $mform->addRule('playabletimestart',
             get_string('validationpositivenum', 'videoannotation'), 'regex', '/^\d+(\.\d+)?$/', 'client');
         $mform->setType('playabletimestart', PARAM_INT);
+
         // Playable end time.
 
         $mform->addElement('text', 'playabletimeend', get_string('playabletimeend', 'videoannotation'));
@@ -185,11 +186,13 @@ if ($mform->is_cancelled()) {
         $clip->videowidth = $data->videowidth;
         $clip->videoheight = $data->videoheight;
         $clip->timecreated = time();
+        $clip->timemodified = time();
         $DB->insert_record('videoannotation_clips', $clip);
         redirect("view.php?id=" . $cm->id . ($groupid ? '&group=' . $groupid : ''));
         echo get_string('clipadded', 'videoannotation');
     }
 } else {
+    echo $OUTPUT->header();
     if ($clip) {
         echo $OUTPUT->heading(get_string('editclip', 'videoannotation'));
         $mform->set_data(array(
@@ -210,5 +213,5 @@ if ($mform->is_cancelled()) {
     }
 }
 
-    // Finish the page.
-    echo $OUTPUT->footer();
+// Finish the page.
+echo $OUTPUT->footer();

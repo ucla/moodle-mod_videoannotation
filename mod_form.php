@@ -81,11 +81,7 @@ class mod_videoannotation_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        // Adding the required "intro" field to hold the description of the instance
-        // DEPRECATED with upgrade to Moodle2.3
-        /* $mform->addElement('htmleditor', 'intro', get_string('videoannotationintro', 'videoannotation'));
-          $mform->setType('intro', PARAM_RAW); */
-        $this->add_intro_editor(true, get_string('videoannotationintro', 'videoannotation'));
+        $this->standard_intro_elements(get_string('videoannotationintro', 'videoannotation'));
         $mform->addHelpButton('introeditor', 'introeditor', 'videoannotation');
 
         // Clip header
