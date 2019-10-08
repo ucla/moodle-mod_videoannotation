@@ -997,7 +997,8 @@ if ($clip): ?>
 
                         jQuery('#flashPlayerVolumeBar').slider('option', 'value', evt.volume);
                     }
-                }
+                },
+                primary: 'html5'
             };
 
             if (rtmp) {

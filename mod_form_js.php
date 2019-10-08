@@ -58,6 +58,7 @@ jQuery('#id_preview').click(function() {
                 allowfullscreen: "true",
                 volume: 66,
                 mute: false,
+                primary: "html5"
             };
 
             if(jsonData[0]["file"].match(/youtube/g)) {
