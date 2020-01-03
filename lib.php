@@ -327,28 +327,6 @@ function videoannotation_get_participants($videoannotationid) {
 }
 
 /**
- * This function returns if a scale is being used by one videoannotation
- * if it has support for grading and scales. Commented code should be
- * modified if necessary. See forum, glossary or journal modules
- * as reference.
- *
- * @param int $videoannotationid ID of an instance of this module
- * @return mixed
- * @todo Finish documenting this function
- */
-function videoannotation_scale_used($videoannotationid, $scaleid) {
-    $return = false;
-
-    // $rec = get_record("videoannotation","id","$videoannotationid","scale","-$scaleid");
-    //
-    // if (!empty($rec) && !empty($scaleid)) {
-    //    $return = true;
-    // }
-
-    return $return;
-}
-
-/**
  * Checks if scale is being used by any instance of videoannotation.
  * This function was added in 1.9
  *
