@@ -375,7 +375,7 @@ if (!optional_param('printable', false, PARAM_BOOL)) {
 
         global $CFG, $COURSE;
 
-        if (optional_param('grade', null, PARAM_INT) != null || optional_param('feedback', 0, PARAM_RAW) != null) {
+        if (optional_param('grade', null, PARAM_INT) != null || isset(optional_param_array('feedback', [], PARAM_RAW)['text'])) {
             if ($videoannotation->groupmode == NOGROUPS) {
                 $gradeuserids = array($userid);
             } else {
@@ -388,14 +388,14 @@ if (!optional_param('printable', false, PARAM_BOOL)) {
                     array(
                     'userid' => $gradeuserid,
                     'rawgrade' => optional_param('grade', null, PARAM_INT),
-                    'feedback' => optional_param('feedback', 0, PARAM_RAW)
+                    'feedback' => optional_param_array('feedback', [], PARAM_RAW)['text'] ?? 0,
                     ), array (
                     'itemname' => $videoannotation->name . (isset($groups[$groupid]) ? ' (' . $groups[$groupid]->name . ')' : '')
                     ));
 
                 if ($submission) {
                     $submission->grade = optional_param('grade', 0, PARAM_INT);
-                    $submission->gradecomment = optional_param('feedback', 0, PARAM_RAW);
+                    $submission->gradecomment = optional_param_array('feedback', [], PARAM_RAW)['text'] ?? 0;
                     $submission->timegraded = $submission->timemodified = time();
                     $DB->update_record('videoannotation_submissions', $submission);
                 } else {
@@ -405,7 +405,7 @@ if (!optional_param('printable', false, PARAM_BOOL)) {
                     $submission->groupid = $groupid;
                     $submission->clipid = $clip ? $clip->id : null;
                     $submission->grade = optional_param('grade', null, PARAM_INT);
-                    $submission->gradecomment = optional_param('feedback', 0, PARAM_RAW);
+                    $submission->gradecomment = optional_param_array('feedback', [], PARAM_RAW)['text'] ?? 0;
                     $submission->timegraded = $submission->timecreated = time();
                     $submission->timemodified = time();
                     $DB->insert_record('videoannotation_submissions', $submission);
@@ -440,8 +440,8 @@ if (!optional_param('printable', false, PARAM_BOOL)) {
             <tr>
                 <td>Feedback:</td>
                 <td style="text-align:left">
-                    <?php print_textarea(false, 6, 50, 0, 0, 'feedback', strip_tags(isset($submission->gradecomment) ?
-                    $submission->gradecomment : ''), $COURSE->id); ?>
+                    <?php echo $OUTPUT->print_textarea('feedback', 'edit-feedback', isset($submission->gradecomment) ?
+                    $submission->gradecomment : '', 6, 50); ?>
                 </td>
             </tr>
             <tr>
